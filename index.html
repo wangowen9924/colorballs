@@ -33,26 +33,33 @@ body{
 /* ═══════════ MOBILE layout ═══════════ */
 .mobile-wrap{display:none;flex-direction:column;height:100%;overflow:hidden;}
 
-/* top bar */
+/* top bar - single compact row */
 .m-topbar{
   display:flex;align-items:center;gap:8px;
-  padding:8px 10px;background:var(--panel);
+  padding:5px 10px;background:var(--panel);
   border-bottom:1px solid var(--border);flex-shrink:0;
 }
-.m-topbar .logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:2px;}
+.m-topbar .logo{font-family:'Orbitron',monospace;font-size:13px;font-weight:900;letter-spacing:1px;white-space:nowrap;}
 .m-topbar .logo .l1{color:#ff3b5c;} .m-topbar .logo .l2{color:#3b9eff;} .m-topbar .logo .l3{color:#3bffb0;}
-.m-stat{display:flex;flex-direction:column;align-items:center;background:#111128;border-radius:8px;padding:4px 10px;min-width:52px;}
-.m-stat .lbl{font-size:8px;letter-spacing:2px;color:#3a3a5c;font-family:'Orbitron',monospace;text-transform:uppercase;}
-.m-stat .val{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:#e8e8ff;}
+.m-stat{display:flex;flex-direction:column;align-items:center;background:#111128;border-radius:8px;padding:3px 10px;min-width:52px;}
+.m-stat .lbl{font-size:8px;letter-spacing:2px;color:#8888aa;font-family:'Orbitron',monospace;text-transform:uppercase;}
+.m-stat .val{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:#e8e8ff;}
 .val.flash{animation:flash .3s ease;}
 @keyframes flash{0%,100%{color:#e8e8ff}50%{color:#ffe03b;text-shadow:0 0 12px #ffe03b;}}
-.m-topbar-right{display:flex;align-items:center;gap:6px;margin-left:auto;}
-.m-next-label{font-size:8px;letter-spacing:2px;color:#3a3a5c;font-family:'Orbitron',monospace;text-transform:uppercase;margin-bottom:2px;text-align:center;}
+/* board+side row */
+.m-game-row{flex:1;display:flex;overflow:hidden;min-height:0;}
+.m-side{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--panel);border-left:1px solid var(--border);
+  padding:6px 4px;gap:4px;flex-shrink:0;width:44px;
+}
+.m-next-label{font-size:7px;letter-spacing:1px;color:#3a3a5c;font-family:'Orbitron',monospace;text-transform:uppercase;writing-mode:vertical-rl;margin-bottom:4px;}
 
 /* board area */
 .m-board-wrap{
   flex:1;display:flex;align-items:center;justify-content:center;
   overflow:hidden;min-height:0;
+  background:var(--bg);
 }
 #board-mobile{border:2px solid #1e1e42;border-radius:8px;display:block;
   box-shadow:0 0 0 1px #0a0a20,0 0 20px rgba(59,158,255,.08);background:#060612;}
@@ -60,7 +67,7 @@ body{
 /* ── Virtual D-pad ── */
 .dpad-wrap{
   flex-shrink:0;
-  background:rgba(0,0,0,.3);
+  background:#0a0a18;
   border-top:1px solid #111128;
   padding:10px 16px 14px;
   display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -201,26 +208,24 @@ kbd{display:inline-block;background:#111128;border:1px solid #22224a;border-radi
 <!-- ═══ MOBILE ═══ -->
 <div class="mobile-wrap">
 
-  <!-- top info bar -->
+  <!-- top info bar: compact single row -->
   <div class="m-topbar">
-    <div class="logo" style="font-size:13px;line-height:1.2">
-      <em class="l1" style="display:inline">彩球</em>
-      <em class="l2" style="display:inline">消消</em>
-      <em class="l3" style="display:inline">乐</em>
+    <div class="logo">
+      <em class="l1" style="display:inline">彩球</em><em class="l2" style="display:inline">消消</em><em class="l3" style="display:inline">乐</em>
     </div>
     <div class="m-stat"><div class="lbl">得分</div><div class="val" id="se-m">0</div></div>
     <div class="m-stat"><div class="lbl">关卡</div><div class="val" id="le-m">1</div></div>
-    <div class="m-topbar-right">
-      <div>
-        <div class="m-next-label">下一组</div>
-        <canvas id="nc-m" width="32" height="96"></canvas>
-      </div>
-    </div>
   </div>
 
-  <!-- board -->
-  <div class="m-board-wrap">
-    <canvas id="board-mobile"></canvas>
+  <!-- board row: board left, next-piece sidebar right -->
+  <div class="m-game-row">
+    <div class="m-board-wrap">
+      <canvas id="board-mobile"></canvas>
+    </div>
+    <div class="m-side">
+      <div class="m-next-label">下一组</div>
+      <canvas id="nc-m" width="36" height="108"></canvas>
+    </div>
   </div>
 
   <!-- D-pad -->
@@ -341,8 +346,8 @@ function ok(p){
 function calcSZ(){
   if(!isMobile()){SZ=46;return;}
   const d=DIFF[selDiff];
-  const topbarH=60,dpadH=175,margin=8;
-  const availW=window.innerWidth-8;
+  const topbarH=46,dpadH=210,margin=10;
+  const availW=window.innerWidth-44-8;
   const availH=window.innerHeight-topbarH-dpadH-margin;
   const szByW=Math.floor(availW/d.cols);
   const szByH=Math.floor(availH/ROWS);
