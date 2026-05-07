@@ -340,11 +340,14 @@ function ok(p){
 // ═══════════════════════════════════════
 function calcSZ(){
   if(!isMobile()){SZ=46;return;}
-  // fit board to screen width with some padding
-  const pad=16;
   const d=DIFF[selDiff];
-  SZ=Math.floor((window.innerWidth-pad*2)/d.cols);
-  SZ=Math.min(SZ,46);
+  const topbarH=60,dpadH=175,margin=8;
+  const availW=window.innerWidth-8;
+  const availH=window.innerHeight-topbarH-dpadH-margin;
+  const szByW=Math.floor(availW/d.cols);
+  const szByH=Math.floor(availH/ROWS);
+  SZ=Math.min(szByW,szByH,46);
+  SZ=Math.max(SZ,20);
 }
 
 function initGame(di){
