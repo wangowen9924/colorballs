@@ -53,7 +53,7 @@ body{
   background:var(--panel);border-left:1px solid var(--border);
   padding:6px 4px;gap:4px;flex-shrink:0;width:44px;
 }
-.m-next-label{font-size:7px;letter-spacing:1px;color:#3a3a5c;font-family:'Orbitron',monospace;text-transform:uppercase;writing-mode:vertical-rl;margin-bottom:4px;}
+.m-next-label{font-size:7px;letter-spacing:1px;color:#8888aa;font-family:'Orbitron',monospace;text-transform:uppercase;writing-mode:vertical-rl;margin-bottom:4px;}
 
 /* board area */
 .m-board-wrap{
@@ -69,7 +69,7 @@ body{
   flex-shrink:0;
   background:#0a0a18;
   border-top:1px solid #111128;
-  padding:10px 16px 14px;
+  padding:10px 16px 14px 70px;
   display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
 .dpad{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;width:200px;}
@@ -161,6 +161,9 @@ kbd{display:inline-block;background:#111128;border:1px solid #22224a;border-radi
 .color-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .modal-start{width:100%;padding:14px;border-radius:10px;border:none;background:linear-gradient(135deg,#1a7acc,#8a1ab0);color:#fff;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:3px;cursor:pointer;box-shadow:0 4px 24px rgba(100,100,255,.2);transition:opacity .15s;}
 .modal-start:active{opacity:.8;}
+.modal-cancel{width:100%;padding:11px;border-radius:10px;border:1px solid #222244;background:transparent;color:#444466;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;margin-top:8px;transition:color .15s,border-color .15s;}
+.modal-cancel:active{color:#6666aa;border-color:#333366;}
+.modal-cancel.hidden{display:none;}
 
 /* ═══════════ RESPONSIVE ═══════════ */
 @media (max-width: 600px), (max-height: 700px) and (orientation: portrait) {
@@ -178,6 +181,7 @@ kbd{display:inline-block;background:#111128;border:1px solid #22224a;border-radi
     <div class="modal-title">选 择 难 度</div>
     <div class="diff-cards" id="diffCards"></div>
     <button class="modal-start" id="modalStart">开 始 游 戏</button>
+    <button class="modal-cancel hidden" id="modalCancel">取 消 / 继 续 游 戏</button>
   </div>
 </div>
 
@@ -743,10 +747,18 @@ dpBtn('dp-drop',  ()=>hardDrop());
 // ═══════════════════════════════════════
 //  MODAL + CONTROL BUTTONS
 // ═══════════════════════════════════════
-function openModal(){buildModal();document.getElementById('modal').classList.add('show');}
+function openModal(){
+  buildModal();
+  const cancelBtn=document.getElementById('modalCancel');
+  // show cancel button only if a game is already in progress
+  if(running||over){cancelBtn.classList.remove('hidden');}
+  else{cancelBtn.classList.add('hidden');}
+  document.getElementById('modal').classList.add('show');
+}
 function closeModal(){document.getElementById('modal').classList.remove('show');}
 
 document.getElementById('modalStart').addEventListener('click',()=>{closeModal();initGame(selDiff);});
+document.getElementById('modalCancel').addEventListener('click',()=>{closeModal();if(paused)togglePause();});
 ['sb','sb-m'].forEach(id=>document.getElementById(id).addEventListener('click',openModal));
 ['pb','pb-m'].forEach(id=>document.getElementById(id).addEventListener('click',togglePause));
 
